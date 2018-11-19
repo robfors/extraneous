@@ -6,17 +6,6 @@
   Extraneous = class
   {
 
-    
-    static load(component)
-    {
-      if (component instanceof this.Interpreter)
-        this.load_interpreter(component);
-      else if (component instanceof this.Module)
-        this.load_module(component);
-      else
-        throw new TypeError;
-    }
-
 
     static load_interpreter(interpreter)
     {
@@ -33,7 +22,7 @@
     static load_module(module)
     {
       module.sources.forEach(function(source, that){
-        var interpreter = this._source_router.get(type);
+        var interpreter = Extraneous._source_router.get(source.type);
         interpreter.load(source);
       });
     };
@@ -71,16 +60,17 @@ Extraneous.Module = class {};
 Extraneous.Source = class {};
 (function() {
   
-  var js_interpreter = new Extraneous.Interpreter();
+  var js_interpreter = {};
   js_interpreter.initialize = function() {};
   js_interpreter.types = ['java_script', 'ecma_script'];
   //add 'wasm'
   js_interpreter.load = function(source)
   {
-    if (typeof source.code != 'function')
-      throw new Error("expedited 'code' to be a function");
-    var js_code = source.code.to_text();
+    var code = new Extraneous.Code(source.code);
+    var js_code = code.to_text();
     (new Function(js_code))();
   };
+
+  Extraneous.load_interpreter(js_interpreter);
 
 })();
