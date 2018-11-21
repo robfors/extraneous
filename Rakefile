@@ -9,5 +9,5 @@ task :build do
   files << "lib/js_interpreter.js"
   js_code = ""
   files.each { |file| js_code += File.read(file) + "\n" }
-  File.write('bin/extraneous-0.0.0.js', js_code)
+  File.write('bin/extraneous.js', js_code)
 end
